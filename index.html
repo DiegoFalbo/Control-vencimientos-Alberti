@@ -301,12 +301,22 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let SECTORS = ['W.I.C','CAMARA','DEPOSITO GALLETITAS','DEPOSITO GOLOSINAS','HELADERA EXHIBIDORA','HELADOS','CARAMELERA','GONDOLAS','INSUMOS'];
-const SK = 'cv_session_alberti_v1';
+const SK = 'cv_session_alberti_v2';
 
-let current = null, lockedSector = '', pendingRoute = { view: 'home', sector: '' };
+// Usuarios iniciales por defecto con PIN 1728
+const DEFAULT_USERS = [
+  { id: 'diego', name: 'DIEGO', pin: '1728', role: 'master', active: true, sectors: [] },
+  { id: 'yesica', name: 'YESICA', pin: '1728', role: 'supervisor', active: true, sectors: [] },
+  { id: 'lucas', name: 'LUCAS', pin: '1728', role: 'supervisor', active: true, sectors: [] },
+  { id: 'marcos', name: 'MARCOS', pin: '1728', role: 'encargado', active: true, sectors: [] },
+  { id: 'daiana', name: 'DAIANA', pin: '1728', role: 'encargado', active: true, sectors: [] },
+  { id: 'agustin', name: 'AGUSTIN', pin: '1728', role: 'encargado', active: true, sectors: [] }
+];
+
+let current = null;
 let html5QrCode = null;
 
-let users = [];
+let users = [...DEFAULT_USERS];
 let products = [];
 let BASE_MAESTRO = [];
 let activityLogs = [];
@@ -322,15 +332,8 @@ function roleLabel(r) { return r === 'master' ? 'Master (Acceso Total)' : r === 
 function initFirebaseSync() {
   db.collection('users').onSnapshot(snapshot => {
     if (snapshot.empty) {
-      const defaults = [
-        { id: 'diego', name: 'DIEGO', pin: '2039', role: 'master', active: true, sectors: [] },
-        { id: 'yesica', name: 'YESICA', pin: '2039', role: 'supervisor', active: true, sectors: [] },
-        { id: 'lucas', name: 'LUCAS', pin: '2039', role: 'supervisor', active: true, sectors: [] },
-        { id: 'marcos', name: 'MARCOS', pin: '2039', role: 'encargado', active: true, sectors: [] },
-        { id: 'daiana', name: 'DAIANA', pin: '2039', role: 'encargado', active: true, sectors: [] },
-        { id: 'agustin', name: 'AGUSTIN', pin: '2039', role: 'encargado', active: true, sectors: [] }
-      ];
-      defaults.forEach(u => db.collection('users').doc(u.id).set(u));
+      users = [...DEFAULT_USERS];
+      DEFAULT_USERS.forEach(u => db.collection('users').doc(u.id).set(u));
     } else {
       users = [];
       snapshot.forEach(doc => users.push(doc.data()));
