@@ -50,7 +50,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
     <div class="logo">V</div>
     <h1>Control de Vencimientos</h1>
     <div class="station">MAR DEL PLATA ALBERTI</div>
-    <p class="sub" id="loginMessage">Ingresá tu usuario y PIN.</p>
+    <p class="sub" id="loginMessage">Ingresá tu usuario y PIN (Clave por defecto: 1728).</p>
     <div class="field"><label>Usuario</label><input id="loginUser" type="text" placeholder="Ej: DIEGO" style="text-transform: uppercase;" autocomplete="username"></div>
     <div class="field"><label>PIN</label><input id="loginPin" class="pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
     <button class="login-btn" onclick="login()">Ingresar</button>
@@ -68,7 +68,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
     <div class="top-inner">
       <div class="brand">
         <h1>Control de Vencimientos</h1>
-        <small>MAR DEL PLATA ALBERTI · v2.5 Nube Firebase</small>
+        <small>MAR DEL PLATA ALBERTI · v2.6 Nube Firebase</small>
       </div>
       <div class="userbox">
         <div class="uinfo"><strong id="topName"></strong><span id="topRole"></span></div>
@@ -234,7 +234,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
     <section id="userFormView" class="view">
       <div class="head"><h2 id="userTitle">Crear usuario</h2><button class="back" onclick="show('users')">← Volver</button></div>
       <div class="card">
-        <form id="userForm">
+        <form id="userForm" onsubmit="saveUserForm(event)">
           <input type="hidden" id="userEditId">
           <div class="grid">
             <div><label>Nombre *</label><input id="userName" required style="text-transform: uppercase;"></div>
@@ -246,7 +246,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
                 <option value="encargado">Encargado</option>
               </select>
             </div>
-            <div><label>PIN inicial / nuevo PIN *</label><input id="userPin" type="password" inputmode="numeric" maxlength="4" required></div>
+            <div><label>PIN (Dejar en blanco para mantener actual)</label><input id="userPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
             <div><label>Estado</label>
               <select id="userActive">
                 <option value="true">Activo</option>
@@ -336,7 +336,15 @@ function initFirebaseSync() {
       DEFAULT_USERS.forEach(u => db.collection('users').doc(u.id).set(u));
     } else {
       users = [];
-      snapshot.forEach(doc => users.push(doc.data()));
+      snapshot.forEach(doc => {
+        let uData = doc.data();
+        // Fuerza el PIN 1728 si venía con clave anterior no deseada
+        if (DEFAULT_USERS.some(d => d.id === uData.id) && uData.pin !== '1728') {
+          uData.pin = '1728';
+          db.collection('users').doc(uData.id).update({ pin: '1728' });
+        }
+        users.push(uData);
+      });
       if (current && (current.role === 'supervisor' || current.role === 'master')) renderUsers();
     }
   });
@@ -382,7 +390,7 @@ function initFirebaseSync() {
 }
 
 async function saveUserToFirestore(u) {
-  await db.collection('users').doc(u.id).set(u);
+  await db.collection('users').doc(u.id).set(u, { merge: true });
 }
 
 async function saveProductToFirestore(p) {
@@ -824,7 +832,7 @@ function openUser() {
   $('userForm').reset();
   $('userEditId').value = '';
   $('userTitle').textContent = 'Crear usuario';
-  $('userPin').required = true;
+  $('userPin').value = '';
   toggleSectorAssignment();
   show('userFormView');
 }
@@ -851,7 +859,7 @@ function editUser(id) {
   $('userEditId').value = u.id;
   $('userName').value = u.name;
   $('userRole').value = u.role;
-  $('userPin').value = u.pin || '';
+  $('userPin').value = ''; // Se deja vacío para que no sea obligatorio reingresarlo
   $('userActive').value = u.active ? 'true' : 'false';
   $('userTitle').textContent = 'Editar usuario';
 
@@ -865,17 +873,24 @@ function editUser(id) {
   show('userFormView');
 }
 
-$('userForm').addEventListener('submit', async (e) => {
+async function saveUserForm(e) {
   e.preventDefault();
-  const id = $('userEditId').value || $('userName').value.trim().toLowerCase().replace(/\s+/g, '_');
+  const editId = $('userEditId').value;
+  const id = editId || $('userName').value.trim().toLowerCase().replace(/\s+/g, '_');
   const name = $('userName').value.trim().toUpperCase();
   const role = $('userRole').value;
-  const pin = $('userPin').value.trim();
+  const pinInput = $('userPin').value.trim();
   const active = $('userActive').value === 'true';
 
-  if (!/^\d{4}$/.test(pin)) {
-    toast('El PIN debe tener exactamente 4 dígitos numéricos');
-    return;
+  const existingUser = users.find(u => u.id === id);
+
+  let pin = existingUser ? existingUser.pin : '1728';
+  if (pinInput) {
+    if (!/^\d{4}$/.test(pinInput)) {
+      toast('El PIN debe tener exactamente 4 números');
+      return;
+    }
+    pin = pinInput;
   }
 
   let selectedSectors = [];
@@ -887,11 +902,11 @@ $('userForm').addEventListener('submit', async (e) => {
   const userData = { id, name, role, pin, active, sectors: selectedSectors };
 
   await saveUserToFirestore(userData);
-  await logActivity('GESTIÓN USUARIO', `Se guardó el usuario "${name}" con rol ${roleLabel(role)}`);
+  await logActivity('GESTIÓN USUARIO', `Se actualizó el usuario "${name}"`);
 
   toast('Usuario guardado correctamente');
   show('users');
-});
+}
 
 function renderActivityHistory() {
   const container = $('activityList');
