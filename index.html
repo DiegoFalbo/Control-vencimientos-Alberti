@@ -718,6 +718,21 @@ function renderProducts() {
   }).join('');
 }
 
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  $('editId').value = p.id;
+  $('sku').value = p.sku || '';
+  $('description').value = p.description || '';
+  $('quantity').value = p.quantity || 1;
+  $('expiry').value = p.expiry || '';
+  $('batch').value = p.batch || '';
+  $('sector').value = p.sector || SECTORS[0];
+  $('notes').value = p.notes || '';
+  $('productTitle').textContent = 'Editar vencimiento';
+  show('product');
+}
+
 async function deleteProduct(id, desc) {
   if (confirm(`¿Eliminar vencimiento de "${desc}"?`)) {
     await deleteProductFromFirestore(id, desc);
@@ -804,6 +819,79 @@ function renderUsers() {
     </div>
   `).join('');
 }
+
+function openUser() {
+  $('userForm').reset();
+  $('userEditId').value = '';
+  $('userTitle').textContent = 'Crear usuario';
+  $('userPin').required = true;
+  toggleSectorAssignment();
+  show('userFormView');
+}
+
+function toggleSectorAssignment() {
+  const role = $('userRole').value;
+  const container = $('sectorAssignment');
+  if (role === 'responsable') {
+    container.classList.remove('hidden');
+    $('sectorChecks').innerHTML = SECTORS.map(s => `
+      <label class="check">
+        <input type="checkbox" name="userSectors" value="${esc(s)}">
+        ${esc(s)}
+      </label>
+    `).join('');
+  } else {
+    container.classList.add('hidden');
+  }
+}
+
+function editUser(id) {
+  const u = users.find(x => x.id === id);
+  if (!u) return;
+  $('userEditId').value = u.id;
+  $('userName').value = u.name;
+  $('userRole').value = u.role;
+  $('userPin').value = u.pin || '';
+  $('userActive').value = u.active ? 'true' : 'false';
+  $('userTitle').textContent = 'Editar usuario';
+
+  toggleSectorAssignment();
+  if (u.role === 'responsable' && u.sectors) {
+    const checks = document.querySelectorAll('input[name="userSectors"]');
+    checks.forEach(c => {
+      c.checked = u.sectors.includes(c.value);
+    });
+  }
+  show('userFormView');
+}
+
+$('userForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = $('userEditId').value || $('userName').value.trim().toLowerCase().replace(/\s+/g, '_');
+  const name = $('userName').value.trim().toUpperCase();
+  const role = $('userRole').value;
+  const pin = $('userPin').value.trim();
+  const active = $('userActive').value === 'true';
+
+  if (!/^\d{4}$/.test(pin)) {
+    toast('El PIN debe tener exactamente 4 dígitos numéricos');
+    return;
+  }
+
+  let selectedSectors = [];
+  if (role === 'responsable') {
+    const checks = document.querySelectorAll('input[name="userSectors"]:checked');
+    selectedSectors = Array.from(checks).map(c => c.value);
+  }
+
+  const userData = { id, name, role, pin, active, sectors: selectedSectors };
+
+  await saveUserToFirestore(userData);
+  await logActivity('GESTIÓN USUARIO', `Se guardó el usuario "${name}" con rol ${roleLabel(role)}`);
+
+  toast('Usuario guardado correctamente');
+  show('users');
+});
 
 function renderActivityHistory() {
   const container = $('activityList');
