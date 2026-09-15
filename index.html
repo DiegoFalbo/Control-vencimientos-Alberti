@@ -119,7 +119,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
       <div id="sectorBanner" class="sector-banner hidden"></div>
 
       <div class="card">
-        <form id="productForm">
+        <form id="productForm" onsubmit="saveProductForm(event)">
           <input type="hidden" id="editId">
           <div class="grid">
             <div class="full">
@@ -141,7 +141,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
           </div>
           <div class="form-actions">
             <button type="button" class="btn secondary" onclick="show('home')">Cancelar</button>
-            <button class="btn primary">Guardar Vencimiento</button>
+            <button type="submit" class="btn primary">Guardar Vencimiento</button>
           </div>
         </form>
       </div>
@@ -338,7 +338,6 @@ function initFirebaseSync() {
       users = [];
       snapshot.forEach(doc => {
         let uData = doc.data();
-        // Fuerza el PIN 1728 si venía con clave anterior no deseada
         if (DEFAULT_USERS.some(d => d.id === uData.id) && uData.pin !== '1728') {
           uData.pin = '1728';
           db.collection('users').doc(uData.id).update({ pin: '1728' });
@@ -375,7 +374,6 @@ function initFirebaseSync() {
     if (typeof renderActivityHistory === 'function') renderActivityHistory();
   });
 
-  // Sincronización de Sectores
   db.collection('config').doc('sectors').onSnapshot(doc => {
     if (doc.exists && doc.data().list) {
       SECTORS = doc.data().list;
@@ -505,352 +503,50 @@ async function handleExcelImport(e) {
 
       if (!rows || rows.length === 0) {
         toast('El archivo está vacío');
-        if (statusEl) statusEl.textContent = '';
+        if (statusEl) statusEl.textContent = 'Archivo vacío';
         return;
       }
 
-      let updatedCount = 0;
-      let batch = db.batch();
-      let batchSize = 0;
-
+      let count = 0;
       for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        if (!row || row.length < 2) continue;
-        const sku = String(row[0]).trim();
-        const description = String(row[1]).trim();
-        if (!sku || !description) continue;
-
-        const ref = db.collection('maestro').doc(sku);
-        batch.set(ref, { sku, description });
-        updatedCount++;
-        batchSize++;
-
-        if (batchSize === 500) {
-          await batch.commit();
-          batch = db.batch();
-          batchSize = 0;
+        let r = rows[i];
+        if (!r || r.length < 2) continue;
+        let skuVal = String(r[0] || '').trim();
+        let descVal = String(r[1] || '').trim();
+        if (skuVal && descVal) {
+          let docId = skuVal.replace(/[/\\?%*:|"<>]/g, '_');
+          await db.collection('maestro').doc(docId).set({
+            sku: skuVal,
+            description: descVal,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+          count++;
         }
       }
-
-      if (batchSize > 0) {
-        await batch.commit();
-      }
-
-      toast(`Se importaron ${updatedCount} productos a la base maestra`);
-      if (statusEl) statusEl.textContent = `Éxito: ${updatedCount} registros cargados.`;
+      if (statusEl) statusEl.textContent = `¡Importación exitosa! ${count} SKUs actualizados.`;
+      toast(`Se importaron ${count} productos con éxito`);
     } catch (err) {
       console.error(err);
       toast('Error al procesar el archivo Excel');
-      if (statusEl) statusEl.textContent = 'Error al cargar.';
+      if (statusEl) statusEl.textContent = 'Error en el archivo';
     }
   };
   reader.readAsArrayBuffer(file);
 }
 
 // ==========================================
-// AUTENTICACIÓN Y SESIÓN
+// GESTIÓN DE USUARIOS
 // ==========================================
-function login() {
-  const uInput = $('loginUser').value.trim().toUpperCase();
-  const pInput = $('loginPin').value.trim();
-
-  const user = users.find(u => u.name.toUpperCase() === uInput && u.pin === pInput && u.active);
-  if (!user) {
-    toast('Usuario o PIN incorrectos');
-    return;
-  }
-
-  current = user;
-  localStorage.setItem(SK, JSON.stringify(current));
-
-  $('login').classList.add('hidden');
-  $('app').classList.remove('hidden');
-
-  $('topName').textContent = current.name;
-  $('topRole').textContent = roleLabel(current.role);
-  $('avatar').textContent = current.name.charAt(0);
-
-  if (current.role === 'master') {
-    $('masterSectorsSection').classList.remove('hidden');
-    $('masterExcelSection').classList.remove('hidden');
-    renderAdminSectors();
-  } else {
-    $('masterSectorsSection').classList.add('hidden');
-    $('masterExcelSection').classList.add('hidden');
-  }
-
-  show('home');
-}
-
-function logout() {
-  current = null;
-  localStorage.removeItem(SK);
-  $('app').classList.add('hidden');
-  $('login').classList.remove('hidden');
-  $('loginPin').value = '';
-}
-
-function openAccount() {
-  $('profileAvatar').textContent = current.name.charAt(0);
-  $('profileName').textContent = current.name;
-  $('profileRole').textContent = roleLabel(current.role);
-  $('profileSectors').textContent = current.sectors && current.sectors.length ? `Sectores: ${current.sectors.join(', ')}` : 'Todos los sectores habilitados';
-  show('account');
-}
-
-async function changeOwnPin() {
-  const p1 = prompt('Ingresá tu nuevo PIN de 4 dígitos:');
-  if (!p1) return;
-  if (!/^\d{4}$/.test(p1)) { toast('El PIN debe tener exactamente 4 números'); return; }
-  current.pin = p1;
-  await saveUserToFirestore(current);
-  localStorage.setItem(SK, JSON.stringify(current));
-  toast('PIN actualizado correctamente');
-}
-
-// ==========================================
-// NAVEGACIÓN Y VISTAS
-// ==========================================
-function show(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const target = $(viewId);
-  if (target) target.classList.add('active');
-
-  if (viewId === 'home') renderMetrics();
-  if (viewId === 'critical') renderProducts();
-  if (viewId === 'users') renderUsers();
-  if (viewId === 'history') renderActivityHistory();
-}
-
-function populateSectors() {
-  const sSelect = $('sector');
-  const fSelect = $('sectorFilter');
-  if (sSelect) sSelect.innerHTML = SECTORS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
-  if (fSelect) fSelect.innerHTML = `<option value="">Todos los sectores</option>` + SECTORS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
-}
-
-function openProduct() {
-  $('productForm').reset();
-  $('editId').value = '';
-  $('productTitle').textContent = 'Cargar vencimiento';
-  $('maestroNotice').classList.add('hidden');
-  show('product');
-}
-
-function onSkuInput() {
-  const skuVal = $('sku').value.trim();
-  if (!skuVal) return;
-  const match = BASE_MAESTRO.find(m => String(m.sku) === skuVal);
-  if (match) {
-    $('description').value = match.description;
-    $('maestroNotice').classList.add('hidden');
-  } else {
-    $('maestroNotice').classList.remove('hidden');
-  }
-}
-
-// ==========================================
-// RENDERIZADO Y MÉTRICAS
-// ==========================================
-function getProductStatus(expStr) {
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const exp = new Date(expStr + 'T00:00:00');
-  const diffTime = exp - today;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return { key: 'vencido', label: 'VENCIDO', class: 'vencido' };
-  if (diffDays <= 30) return { key: 'critico', label: `CRÍTICO (${diffDays}d)`, class: 'critico' };
-  if (diffDays <= 45) return { key: 'proximo', label: `PRÓXIMO (${diffDays}d)`, class: 'proximo' };
-  return { key: 'normal', label: `OK (${diffDays}d)`, class: '' };
-}
-
-function renderMetrics() {
-  let v = 0, c = 0, p = 0;
-  products.forEach(prod => {
-    const st = getProductStatus(prod.expiry);
-    if (st.key === 'vencido') v++;
-    else if (st.key === 'critico') c++;
-    else if (st.key === 'proximo') p++;
-  });
-  if ($('mv')) $('mv').textContent = v;
-  if ($('mc')) $('mc').textContent = c;
-  if ($('mp')) $('mp').textContent = p;
-  if ($('mt')) $('mt').textContent = products.length;
-}
-
-function renderProducts() {
-  const container = $('productList');
-  if (!container) return;
-
-  const search = $('search').value.toLowerCase();
-  const stateF = $('stateFilter').value;
-  const sectorF = $('sectorFilter').value;
-
-  const filtered = products.filter(p => {
-    const st = getProductStatus(p.expiry);
-    const matchSearch = p.description.toLowerCase().includes(search) || (p.sku && p.sku.toLowerCase().includes(search));
-    const matchState = !stateF || st.key === stateF;
-    const matchSector = !sectorF || p.sector === sectorF;
-    return matchSearch && matchState && matchSector;
-  });
-
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty">No se encontraron productos registrados.</div>`;
-    return;
-  }
-
-  container.innerHTML = filtered.map(p => {
-    const st = getProductStatus(p.expiry);
-    return `
-      <div class="item">
-        <div>
-          <h3>${esc(p.description)}</h3>
-          <div class="meta">
-            ${p.sku ? `<span class="badge-sku">SKU: ${esc(p.sku)}</span>` : ''}
-            <span>Cant: <b>${p.quantity}</b></span>
-            <span>Vence: <b>${p.expiry}</b></span>
-            <span>Sector: <b>${esc(p.sector)}</b></span>
-            ${p.batch ? `<span>Lote: ${esc(p.batch)}</span>` : ''}
-          </div>
-        </div>
-        <div style="text-align:right">
-          ${st.class ? `<span class="badge ${st.class}">${st.label}</span>` : ''}
-          <div class="item-actions">
-            <button class="btn secondary small" onclick="editProduct('${p.id}')">Editar</button>
-            <button class="btn danger small" onclick="deleteProduct('${p.id}', '${esc(p.description)}')">Eliminar</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function editProduct(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  $('editId').value = p.id;
-  $('sku').value = p.sku || '';
-  $('description').value = p.description || '';
-  $('quantity').value = p.quantity || 1;
-  $('expiry').value = p.expiry || '';
-  $('batch').value = p.batch || '';
-  $('sector').value = p.sector || SECTORS[0];
-  $('notes').value = p.notes || '';
-  $('productTitle').textContent = 'Editar vencimiento';
-  show('product');
-}
-
-async function deleteProduct(id, desc) {
-  if (confirm(`¿Eliminar vencimiento de "${desc}"?`)) {
-    await deleteProductFromFirestore(id, desc);
-    toast('Producto eliminado');
-  }
-}
-
-// ==========================================
-// FORMULARIO PRODUCTO
-// ==========================================
-$('productForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const id = $('editId').value;
-  const sku = $('sku').value.trim();
-  const description = $('description').value.trim();
-  const quantity = Number($('quantity').value);
-  const expiry = $('expiry').value;
-  const batch = $('batch').value.trim();
-  const sector = $('sector').value;
-  const notes = $('notes').value.trim();
-
-  const prodData = { id, sku, description, quantity, expiry, batch, sector, notes, updatedBy: current.name };
-
-  await saveProductToFirestore(prodData);
-
-  if (sku && !BASE_MAESTRO.some(m => String(m.sku) === sku)) {
-    await db.collection('maestro').doc(sku).set({ sku, description });
-  }
-
-  toast(id ? 'Producto actualizado' : 'Vencimiento guardado');
-  show('home');
-});
-
-// ==========================================
-// CÁMARA Y ESCÁNER QR/BARCODE
-// ==========================================
-function toggleCameraScanner() {
-  $('camera-modal').style.display = 'flex';
-  html5QrCode = new Html5Qrcode("reader");
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 150 } },
-    (decodedText) => {
-      $('sku').value = decodedText;
-      onSkuInput();
-      stopCameraScanner();
-      toast('Código escaneado');
-    },
-    () => {}
-  ).catch(err => {
-    console.error(err);
-    toast('Error al acceder a la cámara');
-    stopCameraScanner();
-  });
-}
-
-function stopCameraScanner() {
-  if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-      html5QrCode.clear();
-      $('camera-modal').style.display = 'none';
-    }).catch(() => {
-      $('camera-modal').style.display = 'none';
-    });
-  } else {
-    $('camera-modal').style.display = 'none';
-  }
-}
-
-// ==========================================
-// USUARIOS Y ACTIVIDAD
-// ==========================================
-function renderUsers() {
-  const container = $('userList');
-  if (!container) return;
-  container.innerHTML = users.map(u => `
-    <div class="userrow ${!u.active ? 'inactive' : ''}">
-      <div><strong>${esc(u.name)}</strong></div>
-      <div><span class="role ${u.role}">${roleLabel(u.role)}</span></div>
-      <div>${u.active ? 'Activo' : 'Desactivado'}</div>
-      <div>
-        <button class="btn secondary small" onclick="editUser('${u.id}')">Editar</button>
-      </div>
-    </div>
-  `).join('');
-}
-
 function openUser() {
-  $('userForm').reset();
   $('userEditId').value = '';
-  $('userTitle').textContent = 'Crear usuario';
+  $('userName').value = '';
+  $('userRole').value = 'encargado';
   $('userPin').value = '';
+  $('userActive').value = 'true';
+  $('userTitle').textContent = 'Crear usuario';
+  renderSectorCheckboxes([]);
   toggleSectorAssignment();
   show('userFormView');
-}
-
-function toggleSectorAssignment() {
-  const role = $('userRole').value;
-  const container = $('sectorAssignment');
-  if (role === 'responsable') {
-    container.classList.remove('hidden');
-    $('sectorChecks').innerHTML = SECTORS.map(s => `
-      <label class="check">
-        <input type="checkbox" name="userSectors" value="${esc(s)}">
-        ${esc(s)}
-      </label>
-    `).join('');
-  } else {
-    container.classList.add('hidden');
-  }
 }
 
 function editUser(id) {
@@ -859,77 +555,418 @@ function editUser(id) {
   $('userEditId').value = u.id;
   $('userName').value = u.name;
   $('userRole').value = u.role;
-  $('userPin').value = ''; // Se deja vacío para que no sea obligatorio reingresarlo
-  $('userActive').value = u.active ? 'true' : 'false';
+  $('userPin').value = '';
+  $('userActive').value = String(u.active);
   $('userTitle').textContent = 'Editar usuario';
-
+  renderSectorCheckboxes(u.sectors || []);
   toggleSectorAssignment();
-  if (u.role === 'responsable' && u.sectors) {
-    const checks = document.querySelectorAll('input[name="userSectors"]');
-    checks.forEach(c => {
-      c.checked = u.sectors.includes(c.value);
-    });
-  }
   show('userFormView');
+}
+
+function renderSectorCheckboxes(assignedSectors = []) {
+  const container = $('sectorChecks');
+  if (!container) return;
+  container.innerHTML = SECTORS.map(s => `
+    <label class="check">
+      <input type="checkbox" value="${esc(s)}" ${assignedSectors.includes(s) ? 'checked' : ''}>
+      ${esc(s)}
+    </label>
+  `).join('');
+}
+
+function toggleSectorAssignment() {
+  const role = $('userRole').value;
+  const secAssign = $('sectorAssignment');
+  if (role === 'responsable') {
+    secAssign.classList.remove('hidden');
+  } else {
+    secAssign.classList.add('hidden');
+  }
 }
 
 async function saveUserForm(e) {
   e.preventDefault();
   const editId = $('userEditId').value;
-  const id = editId || $('userName').value.trim().toLowerCase().replace(/\s+/g, '_');
   const name = $('userName').value.trim().toUpperCase();
   const role = $('userRole').value;
   const pinInput = $('userPin').value.trim();
   const active = $('userActive').value === 'true';
 
-  const existingUser = users.find(u => u.id === id);
+  if (!name) { toast('Ingresá el nombre del usuario'); return; }
 
-  let pin = existingUser ? existingUser.pin : '1728';
-  if (pinInput) {
-    if (!/^\d{4}$/.test(pinInput)) {
-      toast('El PIN debe tener exactamente 4 números');
-      return;
-    }
-    pin = pinInput;
-  }
-
-  let selectedSectors = [];
+  let sectorsList = [];
   if (role === 'responsable') {
-    const checks = document.querySelectorAll('input[name="userSectors"]:checked');
-    selectedSectors = Array.from(checks).map(c => c.value);
+    const checks = document.querySelectorAll('#sectorChecks input[type="checkbox"]:checked');
+    checks.forEach(c => sectorsList.push(c.value));
   }
 
-  const userData = { id, name, role, pin, active, sectors: selectedSectors };
+  let userId = editId ? editId : name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+  let existing = users.find(u => u.id === userId);
+
+  let pinToSave = pinInput ? pinInput : (existing ? existing.pin : '1728');
+  if (pinToSave.length !== 4) {
+    toast('El PIN debe tener exactamente 4 dígitos');
+    return;
+  }
+
+  const userData = {
+    id: userId,
+    name: name,
+    pin: pinToSave,
+    role: role,
+    active: active,
+    sectors: sectorsList
+  };
 
   await saveUserToFirestore(userData);
-  await logActivity('GESTIÓN USUARIO', `Se actualizó el usuario "${name}"`);
-
-  toast('Usuario guardado correctamente');
+  toast('Usuario guardado con éxito');
   show('users');
+  renderUsers();
+}
+
+function renderUsers() {
+  const container = $('userList');
+  if (!container) return;
+  container.innerHTML = users.map(u => `
+    <div class="userrow ${u.active ? '' : 'inactive'}">
+      <div>
+        <strong>${esc(u.name)}</strong>
+        <span class="role ${u.role}">${roleLabel(u.role)}</span>
+      </div>
+      <div>${u.sectors && u.sectors.length ? u.sectors.join(', ') : 'Todos los sectores'}</div>
+      <div>${u.active ? 'Activo' : 'Desactivado'}</div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn secondary small" onclick="editUser('${u.id}')">Editar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==========================================
+// FUNCIONES DE NAVEGACIÓN Y UI
+// ==========================================
+function show(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = $(viewId);
+  if (target) target.classList.add('active');
+  if (viewId === 'users' && current) {
+    if (current.role === 'master') {
+      $('masterSectorsSection').classList.remove('hidden');
+      $('masterExcelSection').classList.remove('hidden');
+      renderAdminSectors();
+    } else {
+      $('masterSectorsSection').classList.add('hidden');
+      $('masterExcelSection').classList.add('hidden');
+    }
+    renderUsers();
+  }
+}
+
+function login() {
+  const userVal = $('loginUser').value.trim().toUpperCase();
+  const pinVal = $('loginPin').value.trim();
+
+  const found = users.find(u => u.name === userVal && u.pin === pinVal && u.active);
+  if (found) {
+    current = found;
+    localStorage.setItem(SK, JSON.stringify(current));
+    initAppSession();
+  } else {
+    toast('Usuario o PIN incorrecto, o cuenta desactivada.');
+  }
+}
+
+function logout() {
+  current = null;
+  localStorage.removeItem(SK);
+  $('loginUser').value = '';
+  $('loginPin').value = '';
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+}
+
+function openAccount() {
+  if (!current) return;
+  $('profileAvatar').textContent = current.name.charAt(0);
+  $('profileName').textContent = current.name;
+  $('profileRole').textContent = roleLabel(current.role);
+  $('profileSectors').textContent = current.sectors && current.sectors.length ? `Sectores: ${current.sectors.join(', ')}` : 'Acceso a todos los sectores';
+  show('account');
+}
+
+function changeOwnPin() {
+  const newPin = prompt('Ingresá tu nuevo PIN de 4 dígitos:');
+  if (!newPin) return;
+  if (newPin.trim().length !== 4 || isNaN(newPin)) {
+    toast('El PIN debe tener exactamente 4 números');
+    return;
+  }
+  current.pin = newPin.trim();
+  saveUserToFirestore(current);
+  toast('PIN actualizado con éxito');
+}
+
+function populateSectors() {
+  const selects = ['sector', 'sectorFilter'];
+  selects.forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    const currentVal = el.value;
+    let html = id === 'sectorFilter' ? '<option value="">Todos los sectores</option>' : '';
+    html += SECTORS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+    el.innerHTML = html;
+    if (currentVal) el.value = currentVal;
+  });
+}
+
+function onSkuInput() {
+  const skuVal = $('sku').value.trim();
+  const match = BASE_MAESTRO.find(m => m.sku === skuVal);
+  const notice = $('maestroNotice');
+  if (match) {
+    $('description').value = match.description;
+    if (notice) notice.classList.add('hidden');
+  } else {
+    if (skuVal && notice) notice.classList.remove('hidden');
+  }
+}
+
+function openProduct() {
+  $('editId').value = '';
+  $('sku').value = '';
+  $('description').value = '';
+  $('quantity').value = '1';
+  $('expiry').value = '';
+  $('batch').value = '';
+  $('notes').value = '';
+  $('maestroNotice').classList.add('hidden');
+  $('productTitle').textContent = 'Cargar vencimiento';
+  show('product');
+}
+
+function toggleCameraScanner() {
+  const modal = $('camera-modal');
+  modal.style.display = 'flex';
+  if (!html5QrCode) {
+    html5QrCode = new Html5Qrcode("reader");
+  }
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 150 } },
+    (decodedText) => {
+      $('sku').value = decodedText;
+      onSkuInput();
+      stopCameraScanner();
+      toast('Código escaneado con éxito');
+    },
+    (errorMessage) => {}
+  ).catch(err => {
+    console.error(err);
+    toast('No se pudo iniciar la cámara');
+    stopCameraScanner();
+  });
+}
+
+function stopCameraScanner() {
+  if (html5QrCode && html5QrCode.isScanning) {
+    html5QrCode.stop().then(() => {
+      $('camera-modal').style.display = 'none';
+    }).catch(err => {
+      $('camera-modal').style.display = 'none';
+    });
+  } else {
+    $('camera-modal').style.display = 'none';
+  }
+}
+
+async function saveProductForm(e) {
+  e.preventDefault();
+  const sku = $('sku').value.trim();
+  const description = $('description').value.trim().toUpperCase();
+  const quantity = parseInt($('quantity').value) || 1;
+  const expiry = $('expiry').value;
+  const batch = $('batch').value.trim();
+  const sector = $('sector').value;
+  const notes = $('notes').value.trim();
+
+  if (!description || !expiry || !sector) {
+    toast('Completá los campos obligatorios');
+    return;
+  }
+
+  const pData = {
+    sku,
+    description,
+    quantity,
+    expiry,
+    batch,
+    sector,
+    notes,
+    user: current.name,
+    timestamp: new Date().toISOString()
+  };
+
+  await saveProductToFirestore(pData);
+
+  // Si el SKU no está en la base maestra, agregarlo automáticamente
+  if (sku && !BASE_MAESTRO.some(m => m.sku === sku)) {
+    let docId = sku.replace(/[/\\?%*:|"<>]/g, '_');
+    await db.collection('maestro').doc(docId).set({
+      sku: sku,
+      description: description,
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  toast('Vencimiento guardado correctamente');
+  show('home');
+}
+
+function renderMetrics() {
+  const today = new Date().toISOString().split('T')[0];
+  let v = 0, c = 0, p = 0, t = products.length;
+
+  products.forEach(item => {
+    const diffDays = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) v++;
+    else if (diffDays <= 30) c++;
+    else if (diffDays <= 45) p++;
+  });
+
+  if ($('mv')) $('mv').textContent = v;
+  if ($('mc')) $('mc').textContent = c;
+  if ($('mp')) $('mp').textContent = p;
+  if ($('mt')) $('mt').textContent = t;
+}
+
+function renderProducts() {
+  const container = $('productList');
+  if (!container) return;
+  const searchVal = ($('search').value || '').toLowerCase();
+  const stateVal = $('stateFilter').value;
+  const sectorVal = $('sectorFilter').value;
+  const today = new Date().toISOString().split('T')[0];
+
+  let filtered = products.filter(item => {
+    const matchesSearch = item.description.toLowerCase().includes(searchVal) || (item.sku && item.sku.toLowerCase().includes(searchVal));
+    const matchesSector = !sectorVal || item.sector === sectorVal;
+
+    const diffDays = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
+    let state = 'normal';
+    if (diffDays < 0) state = 'vencido';
+    else if (diffDays <= 30) state = 'critico';
+    else if (diffDays <= 45) state = 'proximo';
+
+    const matchesState = !stateVal || state === stateVal;
+    return matchesSearch && matchesSector && matchesState;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty">No se encontraron productos registrados.</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(item => {
+    const diffDays = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
+    let badgeClass = 'proximo', badgeText = `Vence en ${diffDays} días`;
+    if (diffDays < 0) { badgeClass = 'vencido'; badgeText = `Vencido hace ${Math.abs(diffDays)} días`; }
+    else if (diffDays <= 30) { badgeClass = 'critico'; badgeText = `Crítico (${diffDays} días)`; }
+
+    return `
+      <div class="item">
+        <div>
+          <h3>${esc(item.description)} ${item.sku ? `<span class="badge-sku">SKU: ${esc(item.sku)}</span>` : ''}</h3>
+          <div class="meta">
+            <span>Sector: <strong>${esc(item.sector)}</strong></span>
+            <span>Cantidad: <strong>${item.quantity}</strong></span>
+            <span>Vencimiento: <strong>${item.expiry}</strong></span>
+            ${item.batch ? `<span>Lote: <strong>${esc(item.batch)}</strong></span>` : ''}
+          </div>
+        </div>
+        <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+          <span class="badge ${badgeClass}">${badgeText}</span>
+          <button class="btn danger small" onclick="deleteProductFromFirestore('${item.id}', '${esc(item.description)}')">Eliminar</button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderActivityHistory() {
   const container = $('activityList');
   if (!container) return;
   if (activityLogs.length === 0) {
-    container.innerHTML = `<div class="empty">No hay registros de actividad recientes.</div>`;
+    container.innerHTML = '<div class="empty">No hay actividad registrada en el historial.</div>';
     return;
   }
-  container.innerHTML = activityLogs.map(a => `
+  container.innerHTML = activityLogs.map(log => `
     <div class="item">
       <div>
-        <strong>${esc(a.action)}</strong> - ${esc(a.details)}
-        <div class="meta" style="margin-top:4px;">
-          <span>Por: <b>${esc(a.user)} (${esc(a.role)})</b></span>
-          <span>Fecha: <b>${new Date(a.timestamp).toLocaleString('es-AR')}</b></span>
+        <h3>[${esc(log.action)}] ${esc(log.details)}</h3>
+        <div class="meta">
+          <span>Usuario: <strong>${esc(log.user)}</strong> (${esc(log.role)})</span>
+          <span>Fecha: <strong>${new Date(log.timestamp).toLocaleString()}</strong></span>
         </div>
       </div>
     </div>
   `).join('');
 }
 
-// INICIALIZAR APLICACIÓN
-initFirebaseSync();
+function initAppSession() {
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('topName').textContent = current.name;
+  $('topRole').textContent = roleLabel(current.role);
+  $('avatar').textContent = current.name.charAt(0);
+  
+  if (current.role === 'encargado') {
+    if ($('adminButton')) $('adminButton').classList.add('hidden');
+  } else {
+    if ($('adminButton')) $('adminButton').classList.remove('hidden');
+  }
+
+  populateSectors();
+  renderMetrics();
+  show('home');
+}
+
+// Auto-login si ya existe sesión previa en localStorage
+window.addEventListener('DOMContentLoaded', () => {
+  initFirebaseSync();
+  const saved = localStorage.getItem(SK);
+  if (saved) {
+    try {
+      current = JSON.parse(saved);
+      if (current) initAppSession();
+    } catch(e) {
+      localStorage.removeItem(SK);
+    }
+  }
+});
+
+// ==========================================
+// EXPOSICIÓN GLOBAL DE FUNCIONES (Evita ReferenceError)
+// ==========================================
+window.login = login;
+window.logout = logout;
+window.openAccount = openAccount;
+window.show = show;
+window.openProduct = openProduct;
+window.onSkuInput = onSkuInput;
+window.toggleCameraScanner = toggleCameraScanner;
+window.stopCameraScanner = stopCameraScanner;
+window.addNewSector = addNewSector;
+window.promptRenameSector = promptRenameSector;
+window.deleteSector = deleteSector;
+window.handleExcelImport = handleExcelImport;
+window.openUser = openUser;
+window.editUser = editUser;
+window.saveUserForm = saveUserForm;
+window.changeOwnPin = changeOwnPin;
+window.saveProductForm = saveProductForm;
+window.renderProducts = renderProducts;
+window.renderUsers = renderUsers;
+window.deleteProductFromFirestore = deleteProductFromFirestore;
 </script>
 </body>
 </html>
