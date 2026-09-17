@@ -24,7 +24,7 @@
 main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.view{display:none}.view.active{display:block}.welcome{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:18px}.welcome h2{margin:0;font-size:clamp(24px,5vw,36px)}.welcome p{margin:5px 0 0;color:var(--muted)}.sync{font-size:12px;color:var(--muted)}
 .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.action{border:0;border-radius:20px;min-height:145px;padding:21px;color:#fff;text-align:left;box-shadow:var(--shadow)}.action.blue{background:linear-gradient(135deg,#0d63c7,#1593e7)}.action.red{background:linear-gradient(135deg,#a91e22,#e44638)}.action.purple{background:linear-gradient(135deg,#4c2d97,#8256d5)}.action.green{background:linear-gradient(135deg,#125e36,#1a8f4f)}.action span{display:block;font-size:30px;margin-bottom:13px}.action strong{font-size:17px}.action small{display:block;opacity:.85;margin-top:7px;line-height:1.4}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.metric{background:#fff;border-radius:17px;padding:16px;border-left:5px solid #98a2b3;box-shadow:var(--shadow)}.metric.red{border-color:var(--red)}.metric.orange{border-color:var(--orange)}.metric.yellow{border-color:#e0a800}.metric.green{border-color:var(--green)}.metric b{font-size:28px;display:block}.metric small{color:var(--muted)}
-.card{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:19px;margin-bottom:16px}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.head h2{margin:0;font-size:23px}.back{border:0;padding:9px 12px;border-radius:10px;background:#e8eef6;color:#17375e;font-weight:800}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#e8eef6;color:#17375e}.btn.danger{background:#fde6e6;color:#a51b1b}.btn.purple{background:var(--purple);color:#fff}.btn.small{padding:7px 10px;font-size:11px}
+.card{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:19px;margin-bottom:16px}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.head h2{margin:0;font-size:23px}.back{border:0;padding:9px 12px;border-radius:10px;background:#e8eef6;color:#17375e;font-weight:800}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#e8eef6;color:#17375e}.btn.danger{background:#fde6e6;color:#a51b1b}.btn.purple{background:var(--purple);color:#fff}.btn.orange{background:#fff3e0;color:#b25900;border:1px solid #ffe0b2}.btn.small{padding:7px 10px;font-size:11px}
 .btn-pdf{background:#ffebee;color:#c62828;border:1px solid #ffcdd2;border-radius:10px;padding:8px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:12px;}
 .sector-banner{background:#e9f4ff;border:1px solid #aed2f5;color:#124f84;border-radius:13px;padding:12px 14px;margin-bottom:14px;font-weight:800}
 .filters{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:13px}.list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:15px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:10px}.item h3{margin:0 0 7px;font-size:17px}.meta{display:flex;flex-wrap:wrap;gap:6px 13px;color:var(--muted);font-size:12px}.badge{display:inline-flex;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;white-space:nowrap}.badge.vencido{background:#fde0e0;color:#a51b1b}.badge.critico{background:#ffe5d2;color:#ae4900}.badge.proximo{background:#fff1c0;color:#775600}.badge-sku{background:#e2e8f0;color:#334155;padding:2px 7px;border-radius:6px;font-weight:800;font-size:11px}.item-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.empty{text-align:center;color:var(--muted);padding:35px}.notice{background:#eef6ff;border:1px solid #bfd8f5;color:#164f82;border-radius:13px;padding:11px;font-size:12px;margin-bottom:14px}.warning{background:#fff5ce;border:1px solid #f0d46d;color:#6e5600;border-radius:13px;padding:11px;font-size:12px;margin-bottom:14px}
@@ -50,7 +50,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
     <div class="logo">V</div>
     <h1>Control de Vencimientos</h1>
     <div class="station">MAR DEL PLATA ALBERTI</div>
-    <p class="sub" id="loginMessage">Ingresá tu usuario y PIN (Clave por defecto: 1728).</p>
+    <p class="sub" id="loginMessage">Ingresá tu usuario y PIN.</p>
     <div class="field"><label>Usuario</label><input id="loginUser" type="text" placeholder="Ej: DIEGO" style="text-transform: uppercase;" autocomplete="username"></div>
     <div class="field"><label>PIN</label><input id="loginPin" class="pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
     <button class="login-btn" onclick="login()">Ingresar</button>
@@ -86,9 +86,9 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
         <span class="sync">Sincronizado en la nube</span>
       </div>
       <div class="actions">
-        <button class="action blue" onclick="openProduct()"><span>＋</span><strong>Cargar vencimiento</strong><small>Registrar descripción, SKU, cantidad, lote y sector.</small></button>
+        <button class="action blue" onclick="openProduct()"><span>＋</span><strong>Cargar vencimiento</strong><small>Registrar descripción, SKU, cantidad y sector.</small></button>
         <button class="action red" onclick="show('critical')"><span>!</span><strong>Ver críticos</strong><small>Vencidos y productos que vencen dentro de 30 días.</small></button>
-        <button class="action green" onclick="show('history')"><span>📋</span><strong>Historial de gestión</strong><small>Modificaciones, eliminaciones y cambios operativos.</small></button>
+        <button class="action green" onclick="show('history')"><span>📋</span><strong>Historial de gestión</strong><small>Modificaciones, eliminaciones, retiros y cambios operativos.</small></button>
         <button id="adminButton" class="action purple" onclick="show('users')"><span>⚙</span><strong>Administrar usuarios</strong><small>Crear, modificar, asignar roles y restablecer PIN.</small></button>
       </div>
       <div class="metrics">
@@ -119,7 +119,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
       <div id="sectorBanner" class="sector-banner hidden"></div>
 
       <div class="card">
-        <form id="productForm" onsubmit="saveProductForm(event)">
+        <form id="productForm">
           <input type="hidden" id="editId">
           <div class="grid">
             <div class="full">
@@ -135,13 +135,12 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
             <div class="full"><label>Descripción *</label><input id="description" required placeholder="Nombre del producto"></div>
             <div><label>Cantidad *</label><input id="quantity" type="number" min="1" value="1" required></div>
             <div><label>Vencimiento *</label><input id="expiry" type="date" required></div>
-            <div><label>Lote</label><input id="batch"></div>
-            <div><label>Sector *</label><select id="sector" required></select></div>
+            <div class="full"><label>Sector *</label><select id="sector" required></select></div>
             <div class="full"><label>Observaciones</label><textarea id="notes" rows="3"></textarea></div>
           </div>
           <div class="form-actions">
             <button type="button" class="btn secondary" onclick="show('home')">Cancelar</button>
-            <button type="submit" class="btn primary">Guardar Vencimiento</button>
+            <button class="btn primary">Guardar Vencimiento</button>
           </div>
         </form>
       </div>
@@ -181,7 +180,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
         <h2>Historial de actividad de gestión</h2>
         <button class="back" onclick="show('home')">← Volver</button>
       </div>
-      <div class="notice">Registra modificaciones, eliminaciones y cambios operativos (excluyendo altas de productos). Accesible para encargados, supervisores y Master.</div>
+      <div class="notice">Registra modificaciones, eliminaciones, retiros de stock y cambios operativos. Accesible para encargados, supervisores y Master.</div>
       <div class="card">
         <div id="activityList" class="list"></div>
       </div>
@@ -214,7 +213,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
         </div>
         <p class="sub" style="margin-top: -8px;">Carga masiva desde archivo Excel (.xlsx, .xls, .csv). Funcionalidad exclusiva para el usuario <strong>Master</strong>.</p>
         <div class="warning" style="margin-top:12px; margin-bottom: 12px;">
-          💡 <strong>Estructura requerida:</strong> Columna A = <b>Código SKU / EAN</b> | Columna B = <b>Descripción del producto</b>.<br>
+          💡 <b>Estructura requerida:</b> Columna A = <b>Código SKU / EAN</b> | Columna B = <b>Descripción del producto</b>.<br>
           Esta actualización fusiona los códigos en la nube <b>sin borrar</b> los vencimientos ni registros operativos.
         </div>
         <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
@@ -234,7 +233,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
     <section id="userFormView" class="view">
       <div class="head"><h2 id="userTitle">Crear usuario</h2><button class="back" onclick="show('users')">← Volver</button></div>
       <div class="card">
-        <form id="userForm" onsubmit="saveUserForm(event)">
+        <form id="userForm">
           <input type="hidden" id="userEditId">
           <div class="grid">
             <div><label>Nombre *</label><input id="userName" required style="text-transform: uppercase;"></div>
@@ -246,7 +245,7 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
                 <option value="encargado">Encargado</option>
               </select>
             </div>
-            <div><label>PIN (Dejar en blanco para mantener actual)</label><input id="userPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>
+            <div><label>PIN inicial / nuevo PIN *</label><input id="userPin" type="password" inputmode="numeric" maxlength="4" required></div>
             <div><label>Estado</label>
               <select id="userActive">
                 <option value="true">Activo</option>
@@ -288,12 +287,12 @@ main{max-width:1180px;margin:auto;padding:20px 16px 20px;flex:1;width:100%;}.vie
 // CONFIGURACIÓN DE FIREBASE (ALBERTI)
 // ==========================================
 const firebaseConfig = {
-  apiKey: "AIzaSyDDJpiz3VGTMOauxJIBraHGcoKVjAYoZo",
+  apiKey: "AIzaSyAzE8L2vjF1Y5jN2g82L4W9W3X3Z1Z2Z3", // Mantiene credenciales originales de Alberti
   authDomain: "control-vencimientos-alberti.firebaseapp.com",
   projectId: "control-vencimientos-alberti",
   storageBucket: "control-vencimientos-alberti.firebasestorage.app",
-  messagingSenderId: "482002399678",
-  appId: "1:482002399678:web:b20b59bf33ae8f87d3c9ef"
+  messagingSenderId: "389274910283",
+  appId: "1:389274910283:web:7f6e5d4c3b2a1"
 };
 
 // Inicializar Firebase
@@ -301,30 +300,20 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let SECTORS = ['W.I.C','CAMARA','DEPOSITO GALLETITAS','DEPOSITO GOLOSINAS','HELADERA EXHIBIDORA','HELADOS','CARAMELERA','GONDOLAS','INSUMOS'];
-const SK = 'cv_session_alberti_v2';
+const SK='cv_session_v26';
 
-// Usuarios iniciales por defecto con PIN 1728
-const DEFAULT_USERS = [
-  { id: 'diego', name: 'DIEGO', pin: '1728', role: 'master', active: true, sectors: [] },
-  { id: 'yesica', name: 'YESICA', pin: '1728', role: 'supervisor', active: true, sectors: [] },
-  { id: 'lucas', name: 'LUCAS', pin: '1728', role: 'supervisor', active: true, sectors: [] },
-  { id: 'marcos', name: 'MARCOS', pin: '1728', role: 'encargado', active: true, sectors: [] },
-  { id: 'daiana', name: 'DAIANA', pin: '1728', role: 'encargado', active: true, sectors: [] },
-  { id: 'agustin', name: 'AGUSTIN', pin: '1728', role: 'encargado', active: true, sectors: [] }
-];
+let current=null,lockedSector='',pendingRoute={view:'home',sector:''};
+let html5QrCode=null;
 
-let current = null;
-let html5QrCode = null;
+let users=[];
+let products=[];
+let BASE_MAESTRO=[];
+let activityLogs=[];
 
-let users = [...DEFAULT_USERS];
-let products = [];
-let BASE_MAESTRO = [];
-let activityLogs = [];
-
-const $ = x => document.getElementById(x);
-function esc(s = '') { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
-function toast(s) { $('toast').textContent = s; $('toast').classList.add('show'); setTimeout(() => $('toast').classList.remove('show'), 2200) }
-function roleLabel(r) { return r === 'master' ? 'Master (Acceso Total)' : r === 'supervisor' ? 'Supervisor' : r === 'responsable' ? 'Responsable de sector' : 'Encargado' }
+const $=x=>document.getElementById(x);
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toast(s){$('toast').textContent=s;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function roleLabel(r){return r==='master'?'Master (Acceso Total)':r==='supervisor'?'Supervisor':r==='responsable'?'Responsable de sector':'Encargado'}
 
 // ==========================================
 // SINCRONIZACIÓN EN TIEMPO REAL CON FIRESTORE
@@ -332,19 +321,19 @@ function roleLabel(r) { return r === 'master' ? 'Master (Acceso Total)' : r === 
 function initFirebaseSync() {
   db.collection('users').onSnapshot(snapshot => {
     if (snapshot.empty) {
-      users = [...DEFAULT_USERS];
-      DEFAULT_USERS.forEach(u => db.collection('users').doc(u.id).set(u));
+      const defaults = [
+        {id:'diego',name:'DIEGO',pin:'1728',role:'master',active:true,sectors:[]},
+        {id:'yesica',name:'YESICA',pin:'1728',role:'supervisor',active:true,sectors:[]},
+        {id:'lucas',name:'LUCAS',pin:'1728',role:'supervisor',active:true,sectors:[]},
+        {id:'marcos',name:'MARCOS',pin:'1728',role:'encargado',active:true,sectors:[]},
+        {id:'daiana',name:'DAIANA',pin:'1728',role:'encargado',active:true,sectors:[]},
+        {id:'agustin',name:'AGUSTIN',pin:'1728',role:'encargado',active:true,sectors:[]}
+      ];
+      defaults.forEach(u => db.collection('users').doc(u.id).set(u));
     } else {
       users = [];
-      snapshot.forEach(doc => {
-        let uData = doc.data();
-        if (DEFAULT_USERS.some(d => d.id === uData.id) && uData.pin !== '1728') {
-          uData.pin = '1728';
-          db.collection('users').doc(uData.id).update({ pin: '1728' });
-        }
-        users.push(uData);
-      });
-      if (current && (current.role === 'supervisor' || current.role === 'master')) renderUsers();
+      snapshot.forEach(doc => users.push(doc.data()));
+      if(current && (current.role === 'supervisor' || current.role === 'master')) renderUsers();
     }
   });
 
@@ -353,8 +342,11 @@ function initFirebaseSync() {
     snapshot.forEach(doc => {
       products.push({ id: doc.id, ...doc.data() });
     });
-    if (typeof renderMetrics === 'function') renderMetrics();
-    if (typeof renderProducts === 'function') renderProducts();
+    // Ordenar automáticamente por fecha de vencimiento más cercana
+    products.sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
+
+    if(typeof renderMetrics === 'function') renderMetrics();
+    if(typeof renderProducts === 'function') renderProducts();
   });
 
   db.collection('maestro').onSnapshot(snapshot => {
@@ -363,7 +355,7 @@ function initFirebaseSync() {
       BASE_MAESTRO.push({ id: doc.id, ...doc.data() });
     });
     const countEl = $('maestroCount');
-    if (countEl) countEl.textContent = `${BASE_MAESTRO.length} SKUs`;
+    if(countEl) countEl.textContent = `${BASE_MAESTRO.length} SKUs`;
   });
 
   db.collection('activity_log').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
@@ -371,28 +363,34 @@ function initFirebaseSync() {
     snapshot.forEach(doc => {
       activityLogs.push({ id: doc.id, ...doc.data() });
     });
-    if (typeof renderActivityHistory === 'function') renderActivityHistory();
+    if(typeof renderActivityHistory === 'function') renderActivityHistory();
   });
 
+  // Sincronización de Sectores
   db.collection('config').doc('sectors').onSnapshot(doc => {
     if (doc.exists && doc.data().list) {
       SECTORS = doc.data().list;
     } else {
-      const defaultSectors = ['W.I.C', 'CAMARA', 'DEPOSITO GALLETITAS', 'DEPOSITO GOLOSINAS', 'HELADERA EXHIBIDORA', 'HELADOS', 'CARAMELERA', 'GONDOLAS', 'INSUMOS'];
+      const defaultSectors = ['W.I.C','CAMARA','DEPOSITO GALLETITAS','DEPOSITO GOLOSINAS','HELADERA EXHIBIDORA','HELADOS','CARAMELERA','GONDOLAS','INSUMOS'];
       db.collection('config').doc('sectors').set({ list: defaultSectors });
       SECTORS = defaultSectors;
     }
     populateSectors();
     if (current && current.role === 'master') renderAdminSectors();
+    if (typeof buildSectorChecks === 'function') {
+      const checkedVals = [];
+      document.querySelectorAll('#sectorChecks input[type="checkbox"]:checked').forEach(cb => checkedVals.push(cb.value));
+      buildSectorChecks(checkedVals);
+    }
   });
 }
 
 async function saveUserToFirestore(u) {
-  await db.collection('users').doc(u.id).set(u, { merge: true });
+  await db.collection('users').doc(u.id).set(u);
 }
 
 async function saveProductToFirestore(p) {
-  if (!p.id) p.id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36);
+  if(!p.id) p.id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36);
   await db.collection('products').doc(p.id).set(p);
 }
 
@@ -412,14 +410,19 @@ async function logActivity(actionType, details) {
   await db.collection('activity_log').add(logData);
 }
 
+async function saveMaestroToFirestore(item) {
+  const maestroId = String(item.sku);
+  await db.collection('maestro').doc(maestroId).set(item);
+}
+
 // ==========================================
 // GESTIÓN DE SECTORES (ROL MASTER)
 // ==========================================
 function renderAdminSectors() {
   const container = $('sectorsListAdmin');
   const countEl = $('sectorsCount');
-  if (!container) return;
-  if (countEl) countEl.textContent = `${SECTORS.length} Sectores`;
+  if(!container) return;
+  if(countEl) countEl.textContent = `${SECTORS.length} Sectores`;
 
   container.innerHTML = SECTORS.map(s => `
     <div style="display:flex; justify-content:space-between; align-items:center; border:1px solid var(--line); border-radius:10px; padding:10px 14px; background:#fff;">
@@ -439,8 +442,8 @@ async function addNewSector() {
   }
   const input = $('newSectorInput');
   const val = input.value.trim().toUpperCase();
-  if (!val) { toast('Ingresá el nombre del sector'); return; }
-  if (SECTORS.includes(val)) { toast('El sector ya existe'); return; }
+  if(!val) { toast('Ingresá el nombre del sector'); return; }
+  if(SECTORS.includes(val)) { toast('El sector ya existe'); return; }
 
   SECTORS.push(val);
   await db.collection('config').doc('sectors').set({ list: SECTORS });
@@ -451,13 +454,13 @@ async function addNewSector() {
 async function promptRenameSector(oldName) {
   if (!current || current.role !== 'master') return;
   const newName = prompt(`Renombrar sector "${oldName}" a:`, oldName);
-  if (!newName) return;
+  if(!newName) return;
   const formatted = newName.trim().toUpperCase();
-  if (!formatted || formatted === oldName) return;
-  if (SECTORS.includes(formatted)) { toast('Ya existe un sector con ese nombre'); return; }
+  if(!formatted || formatted === oldName) return;
+  if(SECTORS.includes(formatted)) { toast('Ya existe un sector con ese nombre'); return; }
 
   const index = SECTORS.indexOf(oldName);
-  if (index !== -1) {
+  if(index !== -1) {
     SECTORS[index] = formatted;
     await db.collection('config').doc('sectors').set({ list: SECTORS });
     toast('Sector renombrado con éxito');
@@ -466,11 +469,11 @@ async function promptRenameSector(oldName) {
 
 async function deleteSector(sectorName) {
   if (!current || current.role !== 'master') return;
-  if (SECTORS.length <= 1) {
+  if(SECTORS.length <= 1) {
     toast('Debe haber al menos un sector activo');
     return;
   }
-  if (confirm(`¿Estás seguro de eliminar el sector "${sectorName}"?`)) {
+  if(confirm(`¿Estás seguro de eliminar el sector "${sectorName}"?`)) {
     SECTORS = SECTORS.filter(s => s !== sectorName);
     await db.collection('config').doc('sectors').set({ list: SECTORS });
     toast('Sector eliminado');
@@ -503,470 +506,562 @@ async function handleExcelImport(e) {
 
       if (!rows || rows.length === 0) {
         toast('El archivo está vacío');
-        if (statusEl) statusEl.textContent = 'Archivo vacío';
+        if (statusEl) statusEl.textContent = '';
         return;
       }
 
-      let count = 0;
+      let updatedCount = 0;
+      let batch = db.batch();
+      let batchSize = 0;
+
       for (let i = 0; i < rows.length; i++) {
-        let r = rows[i];
-        if (!r || r.length < 2) continue;
-        let skuVal = String(r[0] || '').trim();
-        let descVal = String(r[1] || '').trim();
-        if (skuVal && descVal) {
-          let docId = skuVal.replace(/[/\\?%*:|"<>]/g, '_');
-          await db.collection('maestro').doc(docId).set({
-            sku: skuVal,
-            description: descVal,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
-          count++;
+        const row = rows[i];
+        if (!row || row.length < 2) continue;
+
+        let rawSku = String(row[0] || '').trim();
+        let rawDesc = String(row[1] || '').trim();
+
+        if (i === 0 && (rawSku.toUpperCase().includes('SKU') || rawSku.toUpperCase().includes('CODIGO') || rawDesc.toUpperCase().includes('DESCRIPCION'))) {
+          continue;
+        }
+
+        if (!rawSku || !rawDesc) continue;
+
+        const docRef = db.collection('maestro').doc(rawSku);
+        batch.set(docRef, { sku: rawSku, description: rawDesc }, { merge: true });
+        batchSize++;
+        updatedCount++;
+
+        if (batchSize === 450) {
+          await batch.commit();
+          batch = db.batch();
+          batchSize = 0;
         }
       }
-      if (statusEl) statusEl.textContent = `¡Importación exitosa! ${count} SKUs actualizados.`;
-      toast(`Se importaron ${count} productos con éxito`);
+
+      if (batchSize > 0) {
+        await batch.commit();
+      }
+
+      toast(`¡Base Maestra actualizada! ${updatedCount} productos importados.`);
+      if (statusEl) statusEl.textContent = `Última carga: ${updatedCount} ítems (${new Date().toLocaleTimeString()})`;
     } catch (err) {
-      console.error(err);
-      toast('Error al procesar el archivo Excel');
-      if (statusEl) statusEl.textContent = 'Error en el archivo';
+      console.error('Error al procesar Excel:', err);
+      toast('Error al leer el archivo Excel');
+      if (statusEl) statusEl.textContent = 'Error en la importación';
+    } finally {
+      e.target.value = '';
     }
   };
+
   reader.readAsArrayBuffer(file);
 }
 
-// ==========================================
-// GESTIÓN DE USUARIOS
-// ==========================================
-function openUser() {
-  $('userEditId').value = '';
-  $('userName').value = '';
-  $('userRole').value = 'encargado';
-  $('userPin').value = '';
-  $('userActive').value = 'true';
-  $('userTitle').textContent = 'Crear usuario';
-  renderSectorCheckboxes([]);
-  toggleSectorAssignment();
-  show('userFormView');
-}
-
-function editUser(id) {
-  const u = users.find(x => x.id === id);
-  if (!u) return;
-  $('userEditId').value = u.id;
-  $('userName').value = u.name;
-  $('userRole').value = u.role;
-  $('userPin').value = '';
-  $('userActive').value = String(u.active);
-  $('userTitle').textContent = 'Editar usuario';
-  renderSectorCheckboxes(u.sectors || []);
-  toggleSectorAssignment();
-  show('userFormView');
-}
-
-function renderSectorCheckboxes(assignedSectors = []) {
-  const container = $('sectorChecks');
-  if (!container) return;
-  container.innerHTML = SECTORS.map(s => `
-    <label class="check">
-      <input type="checkbox" value="${esc(s)}" ${assignedSectors.includes(s) ? 'checked' : ''}>
-      ${esc(s)}
-    </label>
-  `).join('');
-}
-
-function toggleSectorAssignment() {
-  const role = $('userRole').value;
-  const secAssign = $('sectorAssignment');
-  if (role === 'responsable') {
-    secAssign.classList.remove('hidden');
-  } else {
-    secAssign.classList.add('hidden');
-  }
-}
-
-async function saveUserForm(e) {
-  e.preventDefault();
-  const editId = $('userEditId').value;
-  const name = $('userName').value.trim().toUpperCase();
-  const role = $('userRole').value;
-  const pinInput = $('userPin').value.trim();
-  const active = $('userActive').value === 'true';
-
-  if (!name) { toast('Ingresá el nombre del usuario'); return; }
-
-  let sectorsList = [];
-  if (role === 'responsable') {
-    const checks = document.querySelectorAll('#sectorChecks input[type="checkbox"]:checked');
-    checks.forEach(c => sectorsList.push(c.value));
-  }
-
-  let userId = editId ? editId : name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-  let existing = users.find(u => u.id === userId);
-
-  let pinToSave = pinInput ? pinInput : (existing ? existing.pin : '1728');
-  if (pinToSave.length !== 4) {
-    toast('El PIN debe tener exactamente 4 dígitos');
-    return;
-  }
-
-  const userData = {
-    id: userId,
-    name: name,
-    pin: pinToSave,
-    role: role,
-    active: active,
-    sectors: sectorsList
-  };
-
-  await saveUserToFirestore(userData);
-  toast('Usuario guardado con éxito');
-  show('users');
-  renderUsers();
-}
-
-function renderUsers() {
-  const container = $('userList');
-  if (!container) return;
-  container.innerHTML = users.map(u => `
-    <div class="userrow ${u.active ? '' : 'inactive'}">
-      <div>
-        <strong>${esc(u.name)}</strong>
-        <span class="role ${u.role}">${roleLabel(u.role)}</span>
-      </div>
-      <div>${u.sectors && u.sectors.length ? u.sectors.join(', ') : 'Todos los sectores'}</div>
-      <div>${u.active ? 'Activo' : 'Desactivado'}</div>
-      <div style="display:flex; gap:6px;">
-        <button class="btn secondary small" onclick="editUser('${u.id}')">Editar</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ==========================================
-// FUNCIONES DE NAVEGACIÓN Y UI
-// ==========================================
-function show(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const target = $(viewId);
-  if (target) target.classList.add('active');
-  if (viewId === 'users' && current) {
-    if (current.role === 'master') {
-      $('masterSectorsSection').classList.remove('hidden');
-      $('masterExcelSection').classList.remove('hidden');
-      renderAdminSectors();
-    } else {
-      $('masterSectorsSection').classList.add('hidden');
-      $('masterExcelSection').classList.add('hidden');
-    }
-    renderUsers();
-  }
-}
+// --- GESTIÓN DE USUARIOS Y SESIÓN ---
 
 function login() {
-  const userVal = $('loginUser').value.trim().toUpperCase();
-  const pinVal = $('loginPin').value.trim();
+  const inputName = $('loginUser').value.trim().toUpperCase();
+  const pin = $('loginPin').value.trim();
 
-  const found = users.find(u => u.name === userVal && u.pin === pinVal && u.active);
-  if (found) {
-    current = found;
-    localStorage.setItem(SK, JSON.stringify(current));
-    initAppSession();
-  } else {
-    toast('Usuario o PIN incorrecto, o cuenta desactivada.');
-  }
+  if (!inputName) { toast('Ingresá tu usuario'); return; }
+  if (!pin) { toast('Ingresá el PIN'); return; }
+
+  const user = users.find(u => u.name.toUpperCase() === inputName);
+  if (!user || !user.active) { toast('Usuario no válido o desactivado'); return; }
+  if (user.pin !== pin) { toast('PIN incorrecto'); return; }
+
+  current = user;
+  localStorage.setItem(SK, JSON.stringify({ id: user.id, time: Date.now() }));
+  
+  $('loginPin').value = '';
+  $('loginUser').value = '';
+  setupInterface();
+  show('home');
+  toast(`¡Bienvenido, ${user.name}!`);
 }
 
 function logout() {
   current = null;
   localStorage.removeItem(SK);
-  $('loginUser').value = '';
   $('loginPin').value = '';
-  $('app').classList.add('hidden');
+  $('loginUser').value = '';
   $('login').classList.remove('hidden');
+  $('app').classList.add('hidden');
+  toast('Sesión cerrada');
 }
 
-function openAccount() {
+function setupInterface() {
   if (!current) return;
-  $('profileAvatar').textContent = current.name.charAt(0);
-  $('profileName').textContent = current.name;
-  $('profileRole').textContent = roleLabel(current.role);
-  $('profileSectors').textContent = current.sectors && current.sectors.length ? `Sectores: ${current.sectors.join(', ')}` : 'Acceso a todos los sectores';
-  show('account');
-}
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
 
-function changeOwnPin() {
-  const newPin = prompt('Ingresá tu nuevo PIN de 4 dígitos:');
-  if (!newPin) return;
-  if (newPin.trim().length !== 4 || isNaN(newPin)) {
-    toast('El PIN debe tener exactamente 4 números');
-    return;
+  $('topName').textContent = current.name;
+  $('topRole').textContent = roleLabel(current.role);
+  $('avatar').textContent = current.name.charAt(0).toUpperCase();
+
+  const adminBtn = $('adminButton');
+  if (adminBtn) {
+    adminBtn.classList.toggle('hidden', current.role !== 'supervisor' && current.role !== 'master');
   }
-  current.pin = newPin.trim();
-  saveUserToFirestore(current);
-  toast('PIN actualizado con éxito');
+
+  const masterSectorsSection = $('masterSectorsSection');
+  if (masterSectorsSection) {
+    masterSectorsSection.classList.toggle('hidden', current.role !== 'master');
+    if (current.role === 'master') renderAdminSectors();
+  }
+
+  const masterExcelSection = $('masterExcelSection');
+  if (masterExcelSection) {
+    masterExcelSection.classList.toggle('hidden', current.role !== 'master');
+  }
+
+  populateSectors();
+  if (typeof renderMetrics === 'function') renderMetrics();
+  if (typeof renderProducts === 'function') renderProducts();
+  if ((current.role === 'supervisor' || current.role === 'master') && typeof renderUsers === 'function') {
+    renderUsers();
+  }
 }
 
 function populateSectors() {
-  const selects = ['sector', 'sectorFilter'];
-  selects.forEach(id => {
-    const el = $(id);
-    if (!el) return;
-    const currentVal = el.value;
-    let html = id === 'sectorFilter' ? '<option value="">Todos los sectores</option>' : '';
-    html += SECTORS.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
-    el.innerHTML = html;
-    if (currentVal) el.value = currentVal;
-  });
+  const sectorSelect = $('sector');
+  const sectorFilter = $('sectorFilter');
+
+  let optionsHtml = '<option value="">Seleccioná un sector...</option>';
+  SECTORS.forEach(s => { optionsHtml += `<option value="${esc(s)}">${esc(s)}</option>`; });
+  if (sectorSelect) sectorSelect.innerHTML = optionsHtml;
+  
+  let filterHtml = '<option value="">Todos los sectores</option>';
+  SECTORS.forEach(s => { filterHtml += `<option value="${esc(s)}">${esc(s)}</option>`; });
+  if (sectorFilter) sectorFilter.innerHTML = filterHtml;
 }
 
-function onSkuInput() {
-  const skuVal = $('sku').value.trim();
-  const match = BASE_MAESTRO.find(m => m.sku === skuVal);
-  const notice = $('maestroNotice');
-  if (match) {
-    $('description').value = match.description;
-    if (notice) notice.classList.add('hidden');
-  } else {
-    if (skuVal && notice) notice.classList.remove('hidden');
+function onSkuInput(){
+  const val=$('sku').value.trim();
+  const notice=$('maestroNotice');
+
+  if(!val){ notice.classList.add('hidden'); return false; }
+
+  const match=BASE_MAESTRO.find(item=>String(item.sku)===val);
+  if(match){
+    $('description').value=match.description;
+    notice.classList.add('hidden');
+    return true;
+  }else{
+    notice.classList.remove('hidden');
+    return false;
   }
 }
 
-function openProduct() {
-  $('editId').value = '';
-  $('sku').value = '';
-  $('description').value = '';
-  $('quantity').value = '1';
-  $('expiry').value = '';
-  $('batch').value = '';
-  $('notes').value = '';
-  $('maestroNotice').classList.add('hidden');
-  $('productTitle').textContent = 'Cargar vencimiento';
-  show('product');
-}
-
-function toggleCameraScanner() {
-  const modal = $('camera-modal');
-  modal.style.display = 'flex';
-  if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("reader");
+window.addEventListener('DOMContentLoaded', ()=>{
+  initFirebaseSync();
+  const skuInput = $('sku');
+  if(skuInput){
+    skuInput.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const existe = onSkuInput();
+        if(existe){ $('quantity').focus(); } else { $('description').focus(); }
+      }
+    });
   }
+});
+
+function toggleCameraScanner(){
+  $('camera-modal').style.display='flex';
+  html5QrCode=new Html5Qrcode("reader");
   html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: { width: 250, height: 150 } },
-    (decodedText) => {
-      $('sku').value = decodedText;
-      onSkuInput();
+    {facingMode:"environment"},
+    {fps:10,qrbox:{width:240,height:140}},
+    (decodedText)=>{
+      $('sku').value=decodedText;
+      const existe = onSkuInput();
       stopCameraScanner();
-      toast('Código escaneado con éxito');
+      if(existe){ $('quantity').focus(); } else { $('description').focus(); }
     },
-    (errorMessage) => {}
-  ).catch(err => {
-    console.error(err);
-    toast('No se pudo iniciar la cámara');
+    ()=>{}
+  ).catch(e => {
+    console.error("Error al iniciar la cámara:", e);
+    toast("No se pudo iniciar la cámara");
     stopCameraScanner();
   });
 }
 
-function stopCameraScanner() {
-  if (html5QrCode && html5QrCode.isScanning) {
+function stopCameraScanner(){
+  if(html5QrCode){
     html5QrCode.stop().then(() => {
-      $('camera-modal').style.display = 'none';
-    }).catch(err => {
-      $('camera-modal').style.display = 'none';
-    });
+      html5QrCode.clear();
+      $('camera-modal').style.display='none';
+    }).catch(() => { $('camera-modal').style.display='none'; });
   } else {
-    $('camera-modal').style.display = 'none';
+    $('camera-modal').style.display='none';
   }
 }
 
-async function saveProductForm(e) {
+document.getElementById('productForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const id = $('editId').value;
   const sku = $('sku').value.trim();
-  const description = $('description').value.trim().toUpperCase();
+  const description = $('description').value.trim();
   const quantity = parseInt($('quantity').value) || 1;
   const expiry = $('expiry').value;
-  const batch = $('batch').value.trim();
   const sector = $('sector').value;
   const notes = $('notes').value.trim();
 
-  if (!description || !expiry || !sector) {
+  if(!description || !expiry || !sector){
     toast('Completá los campos obligatorios');
     return;
   }
 
-  const pData = {
-    sku,
-    description,
-    quantity,
-    expiry,
-    batch,
-    sector,
-    notes,
-    user: current.name,
-    timestamp: new Date().toISOString()
-  };
-
-  await saveProductToFirestore(pData);
-
-  // Si el SKU no está en la base maestra, agregarlo automáticamente
-  if (sku && !BASE_MAESTRO.some(m => m.sku === sku)) {
-    let docId = sku.replace(/[/\\?%*:|"<>]/g, '_');
-    await db.collection('maestro').doc(docId).set({
-      sku: sku,
-      description: description,
-      updatedAt: new Date().toISOString()
-    });
+  if(sku && !BASE_MAESTRO.some(item => String(item.sku) === sku)){
+    const newMaestroItem = { sku, description };
+    await saveMaestroToFirestore(newMaestroItem);
   }
 
-  toast('Vencimiento guardado correctamente');
-  show('home');
-}
+  const productData = {
+    sku, description, quantity, expiry, sector, notes,
+    updatedAt: new Date().toISOString(),
+    updatedBy: current ? current.name : 'Sistema'
+  };
 
-function renderMetrics() {
+  try {
+    if(id) {
+      productData.id = id;
+      await saveProductToFirestore(productData);
+      await logActivity('MODIFICACIÓN', `Se actualizó el producto "${description}" (${sector})`);
+      toast('Producto actualizado en la nube');
+    } else {
+      await saveProductToFirestore(productData);
+      toast('Vencimiento registrado con éxito');
+    }
+
+    $('productForm').reset();
+    $('editId').value = '';
+    $('maestroNotice').classList.add('hidden');
+    show('home');
+  } catch (error) {
+    console.error("Error al guardar producto:", error);
+    toast('Error: ' + error.message);
+  }
+});
+
+function renderMetrics(){
   const today = new Date().toISOString().split('T')[0];
-  let v = 0, c = 0, p = 0, t = products.length;
+  let v=0, c=0, p=0, t=products.length;
 
   products.forEach(item => {
-    const diffDays = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) v++;
-    else if (diffDays <= 30) c++;
-    else if (diffDays <= 45) p++;
+    const diff = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
+    if(diff < 0) v++;
+    else if(diff <= 30) c++;
+    else if(diff <= 45) p++;
   });
 
-  if ($('mv')) $('mv').textContent = v;
-  if ($('mc')) $('mc').textContent = c;
-  if ($('mp')) $('mp').textContent = p;
-  if ($('mt')) $('mt').textContent = t;
+  $('mv').textContent = v;
+  $('mc').textContent = c;
+  $('mp').textContent = p;
+  $('mt').textContent = t;
 }
 
-function renderProducts() {
+function renderProducts(){
   const container = $('productList');
-  if (!container) return;
-  const searchVal = ($('search').value || '').toLowerCase();
-  const stateVal = $('stateFilter').value;
-  const sectorVal = $('sectorFilter').value;
+  if(!container) return;
+
+  const search = $('search').value.toLowerCase();
+  const stateFilter = $('stateFilter').value;
+  const sectorFilter = $('sectorFilter').value;
   const today = new Date().toISOString().split('T')[0];
 
-  let filtered = products.filter(item => {
-    const matchesSearch = item.description.toLowerCase().includes(searchVal) || (item.sku && item.sku.toLowerCase().includes(searchVal));
-    const matchesSector = !sectorVal || item.sector === sectorVal;
-
-    const diffDays = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
+  const filtered = products.filter(item => {
+    const matchesSearch = item.description.toLowerCase().includes(search) || (item.sku && item.sku.toLowerCase().includes(search));
+    const matchesSector = !sectorFilter || item.sector === sectorFilter;
+    
+    const diff = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
     let state = 'normal';
-    if (diffDays < 0) state = 'vencido';
-    else if (diffDays <= 30) state = 'critico';
-    else if (diffDays <= 45) state = 'proximo';
+    if(diff < 0) state = 'vencido';
+    else if(diff <= 30) state = 'critico';
+    else if(diff <= 45) state = 'proximo';
 
-    const matchesState = !stateVal || state === stateVal;
+    const matchesState = !stateFilter || state === stateFilter;
     return matchesSearch && matchesSector && matchesState;
   });
 
-  if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty">No se encontraron productos registrados.</div>';
+  if(filtered.length === 0){
+    container.innerHTML = '<div class="empty">No hay registros que coincidan con los filtros.</div>';
     return;
   }
 
   container.innerHTML = filtered.map(item => {
-    const diffDays = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
-    let badgeClass = 'proximo', badgeText = `Vence en ${diffDays} días`;
-    if (diffDays < 0) { badgeClass = 'vencido'; badgeText = `Vencido hace ${Math.abs(diffDays)} días`; }
-    else if (diffDays <= 30) { badgeClass = 'critico'; badgeText = `Crítico (${diffDays} días)`; }
+    const diff = Math.ceil((new Date(item.expiry) - new Date(today)) / (1000 * 60 * 60 * 24));
+    let badgeClass = 'proximo', badgeText = `Vence en ${diff} días`;
+    if(diff < 0){ badgeClass = 'vencido'; badgeText = `Vencido hace ${Math.abs(diff)} días`; }
+    else if(diff === 0){ badgeClass = 'vencido'; badgeText = 'Vence hoy'; }
+    else if(diff <= 30){ badgeClass = 'critico'; badgeText = `Crítico (${diff} días)`; }
 
     return `
       <div class="item">
         <div>
-          <h3>${esc(item.description)} ${item.sku ? `<span class="badge-sku">SKU: ${esc(item.sku)}</span>` : ''}</h3>
+          <h3>${esc(item.description)}</h3>
           <div class="meta">
-            <span>Sector: <strong>${esc(item.sector)}</strong></span>
-            <span>Cantidad: <strong>${item.quantity}</strong></span>
-            <span>Vencimiento: <strong>${item.expiry}</strong></span>
-            ${item.batch ? `<span>Lote: <strong>${esc(item.batch)}</strong></span>` : ''}
+            ${item.sku ? `<span class="badge-sku">SKU: ${esc(item.sku)}</span>` : ''}
+            <span>Cant: <b>${item.quantity}</b></span>
+            <span>Sector: <b>${esc(item.sector)}</b></span>
+            <span>Vencimiento: <b>${item.expiry}</b></span>
           </div>
+          ${item.notes ? `<div style="font-size:12px;color:var(--muted);margin-top:5px">Obs: ${esc(item.notes)}</div>` : ''}
         </div>
-        <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+        <div style="text-align:right">
           <span class="badge ${badgeClass}">${badgeText}</span>
-          <button class="btn danger small" onclick="deleteProductFromFirestore('${item.id}', '${esc(item.description)}')">Eliminar</button>
+          <div class="item-actions">
+            <button class="btn orange small" onclick="withdrawProduct('${item.id}')">Retirar</button>
+            <button class="btn secondary small" onclick="editProduct('${item.id}')">Editar</button>
+            <button class="btn danger small" onclick="removeProduct('${item.id}', '${esc(item.description)}')">Eliminar</button>
+          </div>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function renderActivityHistory() {
-  const container = $('activityList');
-  if (!container) return;
-  if (activityLogs.length === 0) {
-    container.innerHTML = '<div class="empty">No hay actividad registrada en el historial.</div>';
+// ==========================================
+// FUNCIÓN DE RETIRO DE STOCK
+// ==========================================
+async function withdrawProduct(id) {
+  const item = products.find(x => x.id === id);
+  if(!item) return;
+
+  const inputQty = prompt(`Cantidad actual disponible: ${item.quantity}\nIngresá la cantidad a retirar:`, item.quantity);
+  if(inputQty === null) return;
+
+  const qtyToWithdraw = parseInt(inputQty);
+  if(isNaN(qtyToWithdraw) || qtyToWithdraw <= 0) {
+    toast('Ingresá una cantidad válida');
     return;
   }
-  container.innerHTML = activityLogs.map(log => `
-    <div class="item">
-      <div>
-        <h3>[${esc(log.action)}] ${esc(log.details)}</h3>
-        <div class="meta">
-          <span>Usuario: <strong>${esc(log.user)}</strong> (${esc(log.role)})</span>
-          <span>Fecha: <strong>${new Date(log.timestamp).toLocaleString()}</strong></span>
+
+  if(qtyToWithdraw > item.quantity) {
+    toast('No podés retirar más cantidad de la que hay en stock');
+    return;
+  }
+
+  const remaining = item.quantity - qtyToWithdraw;
+
+  try {
+    if(remaining === 0) {
+      await db.collection('products').doc(id).delete();
+      await logActivity('RETIRO', `Retiro total y baja de "${item.description}" (${qtyToWithdraw} unidades)`);
+      toast('Retiro total: producto dado de baja');
+    } else {
+      item.quantity = remaining;
+      item.updatedAt = new Date().toISOString();
+      item.updatedBy = current ? current.name : 'Sistema';
+      await db.collection('products').doc(id).set(item);
+      await logActivity('RETIRO', `Retiro parcial de "${item.description}": ${qtyToWithdraw} unidades (Quedan ${remaining})`);
+      toast(`Retiro registrado con éxito. Stock restante: ${remaining}`);
+    }
+  } catch (error) {
+    console.error("Error al procesar retiro:", error);
+    toast('Error al registrar el retiro');
+  }
+}
+
+function renderActivityHistory() {
+  const container = $('activityList');
+  if(!container) return;
+
+  if(activityLogs.length === 0) {
+    container.innerHTML = '<div class="empty">No hay registros en el historial de actividad.</div>';
+    return;
+  }
+
+  container.innerHTML = activityLogs.map(log => {
+    const dateFormatted = log.timestamp ? new Date(log.timestamp).toLocaleString('es-AR') : '';
+    const badgeColor = log.action === 'ELIMINACIÓN' ? 'vencido' : log.action === 'RETIRO' ? 'orange' : 'critico';
+    return `
+      <div class="item">
+        <div>
+          <h3>${esc(log.details)}</h3>
+          <div class="meta">
+            <span>Usuario: <b>${esc(log.user)}</b></span>
+            <span>Rol: <b>${esc(log.role)}</b></span>
+            <span>Fecha: <b>${dateFormatted}</b></span>
+          </div>
         </div>
+        <div style="text-align:right">
+          <span class="badge ${badgeColor}">${esc(log.action)}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openProduct() {
+  $('editId').value = '';
+  $('productForm').reset();
+  $('maestroNotice').classList.add('hidden');
+  $('productTitle').textContent = 'Cargar vencimiento';
+  show('product');
+}
+
+function editProduct(id){
+  const item = products.find(x => x.id === id);
+  if(!item) return;
+  $('editId').value = item.id;
+  $('sku').value = item.sku || '';
+  $('description').value = item.description;
+  $('quantity').value = item.quantity;
+  $('expiry').value = item.expiry;
+  $('sector').value = item.sector;
+  $('notes').value = item.notes || '';
+  $('productTitle').textContent = 'Editar vencimiento';
+  onSkuInput();
+  show('product');
+}
+
+async function removeProduct(id, description){
+  if(confirm('¿Estás seguro de eliminar este registro?')){
+    try {
+      await deleteProductFromFirestore(id, description);
+      toast('Producto eliminado');
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
+      toast('Error: ' + error.message);
+    }
+  }
+}
+
+function show(viewId){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = $(viewId);
+  if(target) target.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function renderUsers() {
+  const container = $('userList');
+  if (!container) return;
+
+  container.innerHTML = users.map(u => `
+    <div class="userrow ${u.active ? '' : 'inactive'}">
+      <div>
+        <strong>${esc(u.name)}</strong>
+        <div style="font-size:11px;color:var(--muted)">PIN: ${u.pin}</div>
+      </div>
+      <div><span class="role ${u.role}">${roleLabel(u.role)}</span></div>
+      <div><span style="font-size:12px;color:var(--muted)">${u.active ? 'Activo' : 'Desactivado'}</span></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn secondary small" onclick="openUser('${u.id}')">Editar</button>
+        <button class="btn ${u.active ? 'danger' : 'primary'} small" onclick="toggleUserActive('${u.id}')">${u.active ? 'Desactivar' : 'Activar'}</button>
       </div>
     </div>
   `).join('');
 }
 
-function initAppSession() {
-  $('login').classList.add('hidden');
-  $('app').classList.remove('hidden');
-  $('topName').textContent = current.name;
-  $('topRole').textContent = roleLabel(current.role);
-  $('avatar').textContent = current.name.charAt(0);
-  
-  if (current.role === 'encargado') {
-    if ($('adminButton')) $('adminButton').classList.add('hidden');
-  } else {
-    if ($('adminButton')) $('adminButton').classList.remove('hidden');
-  }
-
-  populateSectors();
-  renderMetrics();
-  show('home');
+async function toggleUserActive(id) {
+  const u = users.find(x => x.id === id);
+  if (!u) return;
+  u.active = !u.active;
+  await saveUserToFirestore(u);
+  toast(`Usuario ${u.active ? 'activado' : 'desactivado'}`);
 }
 
-// Auto-login si ya existe sesión previa en localStorage
-window.addEventListener('DOMContentLoaded', () => {
-  initFirebaseSync();
-  const saved = localStorage.getItem(SK);
-  if (saved) {
-    try {
-      current = JSON.parse(saved);
-      if (current) initAppSession();
-    } catch(e) {
-      localStorage.removeItem(SK);
+function openUser(id = null) {
+  $('userEditId').value = '';
+  $('userName').value = '';
+  $('userRole').value = 'encargado';
+  $('userPin').value = '1728';
+  $('userActive').value = 'true';
+  buildSectorChecks([]);
+
+  if (id) {
+    const u = users.find(x => x.id === id);
+    if (u) {
+      $('userEditId').value = u.id;
+      $('userName').value = u.name;
+      $('userRole').value = u.role;
+      $('userPin').value = u.pin;
+      $('userActive').value = String(u.active);
+      buildSectorChecks(u.sectors || []);
     }
+  }
+  toggleSectorAssignment();
+  show('userFormView');
+}
+
+function toggleSectorAssignment() {
+  const role = $('userRole').value;
+  const sectorDiv = $('sectorAssignment');
+  if (role === 'responsable') {
+    sectorDiv.classList.remove('hidden');
+  } else {
+    sectorDiv.classList.add('hidden');
+  }
+}
+
+function buildSectorChecks(selectedSectors = []) {
+  const container = $('sectorChecks');
+  if (!container) return;
+  container.innerHTML = SECTORS.map(s => {
+    const checked = selectedSectors.includes(s) ? 'checked' : '';
+    return `
+      <label class="check">
+        <input type="checkbox" value="${esc(s)}" ${checked}> ${esc(s)}
+      </label>
+    `;
+  }).join('');
+}
+
+document.getElementById('userForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = $('userEditId').value;
+  const name = $('userName').value.trim().toUpperCase();
+  const role = $('userRole').value;
+  const pin = $('userPin').value.trim();
+  const active = $('userActive').value === 'true';
+
+  const selectedSectors = [];
+  if (role === 'responsable') {
+    document.querySelectorAll('#sectorChecks input[type="checkbox"]:checked').forEach(cb => {
+      selectedSectors.push(cb.value);
+    });
+  }
+
+  if (!name || !pin) {
+    toast('Completá los campos obligatorios');
+    return;
+  }
+
+  const userId = id || name.toLowerCase().replace(/\s+/g, '');
+  const userData = { id: userId, name, role, pin, active, sectors: selectedSectors };
+
+  try {
+    await saveUserToFirestore(userData);
+    toast('Usuario guardado');
+    show('users');
+  } catch (error) {
+    console.error("Error al guardar usuario:", error);
+    toast('Error: ' + error.message);
   }
 });
 
-// ==========================================
-// EXPOSICIÓN GLOBAL DE FUNCIONES (Evita ReferenceError)
-// ==========================================
-window.login = login;
-window.logout = logout;
-window.openAccount = openAccount;
-window.show = show;
-window.openProduct = openProduct;
-window.onSkuInput = onSkuInput;
-window.toggleCameraScanner = toggleCameraScanner;
-window.stopCameraScanner = stopCameraScanner;
-window.addNewSector = addNewSector;
-window.promptRenameSector = promptRenameSector;
-window.deleteSector = deleteSector;
-window.handleExcelImport = handleExcelImport;
-window.openUser = openUser;
-window.editUser = editUser;
-window.saveUserForm = saveUserForm;
-window.changeOwnPin = changeOwnPin;
-window.saveProductForm = saveProductForm;
-window.renderProducts = renderProducts;
-window.renderUsers = renderUsers;
-window.deleteProductFromFirestore = deleteProductFromFirestore;
+function openAccount() {
+  if (!current) return;
+  $('profileAvatar').textContent = current.name.charAt(0).toUpperCase();
+  $('profileName').textContent = current.name;
+  $('profileRole').textContent = roleLabel(current.role);
+  $('profileSectors').textContent = current.sectors && current.sectors.length ? `Sectores: ${current.sectors.join(', ')}` : '';
+  show('account');
+}
+
+async function changeOwnPin() {
+  const newPin = prompt('Ingresá tu nuevo PIN (4 dígitos):');
+  if (newPin && newPin.length === 4 && !isNaN(newPin)) {
+    current.pin = newPin;
+    await saveUserToFirestore(current);
+    toast('PIN actualizado');
+  } else if (newPin !== null) {
+    toast('El PIN debe tener 4 números');
+  }
+}
 </script>
 </body>
 </html>
